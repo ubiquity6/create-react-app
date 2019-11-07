@@ -37,6 +37,7 @@ const eslint = require('eslint');
 const getCacheIdentifier = require('react-dev-utils/getCacheIdentifier');
 // @remove-on-eject-end
 const postcssNormalize = require('postcss-normalize');
+const rewireYarnWorkspaces = require('react-app-rewire-yarn-workspaces');
 
 const appPackageJson = require(paths.appPackageJson);
 
@@ -146,7 +147,7 @@ module.exports = function(webpackEnv) {
     return loaders;
   };
 
-  return {
+  let config = {
     mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
     // Stop compilation early in production
     bail: isEnvProduction,
@@ -414,7 +415,7 @@ module.exports = function(webpackEnv) {
                 // @remove-on-eject-begin
                 babelrc: false,
                 configFile: false,
-                presets: [require.resolve('babel-preset-react-app')],
+                presets: [require.resolve('ubq-babel-preset')],
                 // Make sure we have a unique cache identifier, erring on the
                 // side of caution.
                 // We remove this when the user ejects because the default
@@ -741,4 +742,6 @@ module.exports = function(webpackEnv) {
     // our own hints via the FileSizeReporter
     performance: false,
   };
+
+  return rewireYarnWorkspaces(config, webpackEnv, undefined);
 };
